@@ -1,7 +1,6 @@
 import { onCleanup, onMount, type JSX } from 'solid-js';
 import { css } from 'solid-styled-components';
 import { classNames } from '@libs/utils/classNames';
-import { parseDuration } from '@libs/utils/parseDuration';
 
 export interface RippleProps {
   disabled?: boolean;
@@ -12,6 +11,12 @@ export interface RippleProps {
   /** 附加到 ripple 容器上的 class, 用于自定义容器尺寸/形状 */
   class?: string;
 }
+const parseDuration = (value: string) => {
+  const match = value.trim().match(/^([\d.]+)(s|ms)$/);
+  if (!match) return 0;
+  const number = Number(match[1]);
+  return match[2] === 's' ? number * 1000 : number;
+};
 
 const pointerFine = matchMedia('(any-pointer: fine)');
 
