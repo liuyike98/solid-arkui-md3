@@ -2,6 +2,7 @@ import { createSignal } from 'solid-js';
 import { styled } from 'solid-styled-components';
 import './assets/normalize.css';
 import { Switch } from '@libs/components/Switch';
+import { CheckBox } from '@libs/components/CheckBox';
 
 function App() {
   return (
@@ -15,6 +16,12 @@ function App() {
       <div>disabled</div>
       <Switch disabled={true}/>
       <Switch checked disabled={true}/>
+      <h2>CheckBox</h2>
+      <CheckBox>unchecked</CheckBox>
+      <CheckBox defaultChecked="indeterminate">indeterminate</CheckBox>
+      <CheckBox checked={true}>checked</CheckBox>
+      <CheckBox disabled={true}>disabled</CheckBox>
+      <CheckBox checked={true} disabled={true}>checked disabled</CheckBox>
     </Wrapper>
   );
 }
