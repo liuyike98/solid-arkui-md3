@@ -1,6 +1,6 @@
 import { css } from 'solid-styled-components';
 import { Checkbox as ArkCheckbox, type CheckboxRootProps } from '@ark-ui/solid';
-import { createSignal, splitProps } from 'solid-js';
+import { createSignal, Show, splitProps } from 'solid-js';
 import { Ripple } from '@libs/components/Ripple';
 import { classNames } from '@libs/utils/classNames';
 
@@ -13,7 +13,9 @@ export function CheckBox(props: CheckBoxProps) {
   return (
     <ArkCheckbox.Root class={classNames(rootClassName, local.class)} {...restProps} ref={setRoot}>
       <ArkCheckbox.Control>
-        <Ripple class='ripple' parent={root()} />
+        <Show when={!props.disabled}>
+          <Ripple class='ripple' parent={root()} />
+        </Show>
         <ArkCheckbox.Indicator>
           <svg viewBox='0 0 18 18'>
             <polyline points='4 9 7.5 12.5 14 6' />
@@ -28,11 +30,11 @@ export function CheckBox(props: CheckBoxProps) {
 
 const rootClassName = css`
   display: flex;
+  width: fit-content;
   align-items: center;
   cursor: pointer;
 
   .ripple {
-    /* background-color: red; */
     width: 250%;
     height: 250%;
     position: absolute;

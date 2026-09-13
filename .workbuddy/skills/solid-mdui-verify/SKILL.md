@@ -58,6 +58,8 @@ babel.transformSync(code, { filename: 'x.jsx', presets: ['<项目>/node_modules/
 - **Ripple 的按压是"松手才播"**：`start()` 里 mouse 走 `oneEvent(['pointerup','pointercancel'], run)`、touch 无 delay 时走 `touchend` → **按住期间没有任何视觉**（只有 hover mask）。所以 MD3 要求的"按住时 10% pressed 状态层"必须宿主自己补（属性通道已删，只能靠 `:active` 等 CSS 手段）。
 - 自带 hover 图层是**逐事件判 `pointerType === 'mouse'`**（混合设备上触屏点按不会粘住）。宿主若改用 CSS `&:hover` 则拿不到这层过滤——`:hover` 在触屏点按后会粘住，`@media (any-pointer: fine)` 只看设备能力、救不了混合机型。
 - 无 `SkillManage` 工具时，skill 直接写 `<workspace>/.workbuddy/skills/<name>/SKILL.md`
+- **演示壳层（`src/App.tsx`）**：`html/body/#root` 已由 `normalize.css` 设为 `100vh + overflow: hidden` → 整页天然不滚，左右分栏只需外层 `display: flex; height: 100vh; overflow: hidden` + 两个 pane 各自 `overflow-y: auto`（右栏记得 `min-width: 0`，否则内容会撑破 flex 项）。组件列表用模块级 `demos` 数组 + `createSignal(demos[0])` 存当前项，切换处用 `{active().render()}`。
+- **壳层样式用 `css` + `classNames`，别用 `styled`**：`solid-styled-components` 的 `styled` 只 `splitProps(clone, ['as','theme'])`，其余 prop（例如演示用的布尔 `active`）会被 spread 到真实 DOM 上。
 
 ## 4. CSS 易错点（踩过的坑）
 
