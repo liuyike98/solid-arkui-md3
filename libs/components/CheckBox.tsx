@@ -35,8 +35,8 @@ const rootClassName = css`
   cursor: pointer;
 
   .ripple {
-    width: 250%;
-    height: 250%;
+    width: 280%;
+    height: 280%;
     position: absolute;
     inset: 50% auto auto 50%;
     translate: -50% -50%;

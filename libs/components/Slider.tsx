@@ -61,11 +61,11 @@ export function Slider(props: SliderProps) {
 const rootClassName = css`
   &[data-orientation='horizontal'] {
     width: 100%;
-    height: 8px;
+    height: 6px;
   }
 
   &[data-orientation='vertical'] {
-    width: 8px;
+    width: 6px;
     height: 100%;
   }
 
@@ -206,7 +206,8 @@ const rootClassName = css`
 
     /* 气泡在 thumb 上方: -200% = 2 个 thumb 高 */
     [data-part='dragging-indicator'] {
-      top: -200%;
+      bottom: 170%;
+
     }
   }
 
