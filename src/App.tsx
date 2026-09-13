@@ -1,28 +1,8 @@
-import { createSignal, For, type JSX } from 'solid-js';
+import { createSignal, For } from 'solid-js';
 import { css } from 'solid-styled-components';
 import './assets/normalize.css';
-import { Switch } from '@libs/components/Switch';
-import { CheckBox } from '@libs/components/CheckBox';
 import { classNames } from '@libs/utils/classNames';
-
-interface Demo {
-  name: string;
-  desc: string;
-  render: () => JSX.Element;
-}
-
-const demos: Demo[] = [
-  {
-    name: 'Switch',
-    desc: 'MD3 开关, 轨道 28×48dp, 选中时填充 primary。MD3 规范中 Switch 不带水波纹, 状态层由 CSS 实现。',
-    render: () => <SwitchDemo />,
-  },
-  {
-    name: 'CheckBox',
-    desc: 'MD3 复选框, 18dp 容器 (2dp 圆角 + 2dp 描边) 搭配 40dp 状态层, 支持未选中 / 选中 / 半选三态, 按压带水波纹。',
-    render: () => <CheckBoxDemo />,
-  },
-];
+import { demos } from './demos';
 
 function App() {
   const [active, setActive] = createSignal(demos[0]);
@@ -48,73 +28,6 @@ function App() {
         <p class={descClassName}>{active().desc}</p>
         {active().render()}
       </main>
-    </div>
-  );
-}
-
-function SwitchDemo() {
-  const [checked, setChecked] = createSignal(true);
-
-  return (
-    <div class={listClassName}>
-      <Row caption='未选中'>
-        <Switch />
-      </Row>
-      <Row caption='选中'>
-        <Switch defaultChecked={true} />
-      </Row>
-      <Row caption='禁用'>
-        <Switch disabled={true} />
-      </Row>
-      <Row caption='选中 + 禁用'>
-        <Switch defaultChecked={true} disabled={true} />
-      </Row>
-      <Row caption='交互示例'>
-        <Switch defaultChecked={true} onCheckedChange={(details) => setChecked(details.checked)} />
-        <div class={stateClassName}>当前: {checked() ? 'checked' : 'unchecked'}</div>
-      </Row>
-    </div>
-  );
-}
-
-function CheckBoxDemo() {
-  const [checked, setChecked] = createSignal<boolean | 'indeterminate'>('indeterminate');
-
-  return (
-    <div class={listClassName}>
-      <Row caption='未选中'>
-        <CheckBox />
-      </Row>
-      <Row caption='选中'>
-        <CheckBox defaultChecked={true} />
-      </Row>
-      <Row caption='半选'>
-        <CheckBox defaultChecked='indeterminate' />
-      </Row>
-      <Row caption='禁用'>
-        <CheckBox disabled={true} />
-      </Row>
-      <Row caption='选中 + 禁用'>
-        <CheckBox defaultChecked={true} disabled={true} />
-      </Row>
-      <Row caption='带文字标签'>
-        <CheckBox>记住这台设备</CheckBox>
-      </Row>
-      <Row caption='交互示例'>
-        <CheckBox checked={checked()} onCheckedChange={(details) => setChecked(details.checked)}>
-          三态切换
-        </CheckBox>
-        <div class={stateClassName}>当前: {String(checked())}</div>
-      </Row>
-    </div>
-  );
-}
-
-function Row(props: { caption: string; children: JSX.Element }) {
-  return (
-    <div class={rowClassName}>
-      <div class={captionClassName}>{props.caption}</div>
-      {props.children}
     </div>
   );
 }
@@ -191,37 +104,6 @@ const descClassName = css`
   margin: 8px 0 0;
   font-size: 14px;
   line-height: 20px;
-  color: #78786a;
-`;
-
-const listClassName = css`
-  max-width: 640px;
-  margin-top: 24px;
-  border: 1px solid #e5e2da;
-  border-radius: 12px;
-`;
-
-const rowClassName = css`
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  padding: 16px 20px;
-
-  & + & {
-    border-top: 1px solid #e5e2da;
-  }
-`;
-
-const captionClassName = css`
-  flex: none;
-  width: 132px;
-  font-size: 14px;
-  color: #78786a;
-`;
-
-const stateClassName = css`
-  margin-left: auto;
-  font-size: 14px;
   color: #78786a;
 `;
 

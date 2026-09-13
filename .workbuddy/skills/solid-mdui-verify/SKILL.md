@@ -51,6 +51,7 @@ babel.transformSync(code, { filename: 'x.jsx', presets: ['<项目>/node_modules/
 ## 3. 本仓库实现约定
 
 - **Ark anatomy → 组件结构**：`Root / Control / Indicator / Label / HiddenInput`，`splitProps(['class','children'])` + `classNames(rootClassName, local.class)` + `{...restProps}`
+- **定位靠 CSS 变量的组件（Slider 这类）先搞清变量挂在哪一层**：Ark 把 `--slider-thumb-offset-N`、`--slider-thumb-transform`、`--slider-range-start|end` 写进 **root** 的 inline style（`slider.style.js` 的 `getRootStyle`）；`getTrackProps` 给 track 挂 `position: relative`、`getControlStyle()` 给 control 挂 `position: relative`（**只给了 `touch-action / user-select / position`，没有 `display: flex`**，所以在 control 上写 `align-items` 是无效的）；thumb 只有 `position: absolute` + `inset-inline-start: var(--slider-thumb-offset-N)` + `transform: var(--slider-thumb-transform)`，**没有任何 top/bottom**。结论：thumb 的包含块是 **control**（百分比 inset 相对 control 宽度），垂直居中必须自己在 CSS 补（`top: 50%; translate: 0 -50%`）；百分比高度链也要自己接（root 定高如 8px → control/track `height: 100%`）。默认值：`min=0 / max=100 / step=1`，`defaultValue = [min]`，裸 `<Slider />` 不会报错；`data-disabled` 同时挂在 root / control / track / thumb 上，所以禁用规则写 `&[data-disabled]` 挂根类即可。
 - **不写 aria-\***（Ark 内部自带）；children 传了就渲染 `Label`，不传就是裸控件
 - **状态层分工**：MD3 里 Switch **没有**水波纹 → 允许伪元素画状态层；CheckBox/Radio 等**有**水波纹 → 状态层必须是真实元素 + `<Ripple />`，禁用伪元素
 - **Ripple 用法**：容器 `border-radius: inherit` + `overflow: hidden`，即"背板定形、Ripple 填充"；`parent` 默认取 `container.parentElement`（交互宿主）；hover 图层走 `--s-ripple-hover-opacity`（MD3 8%），按压波纹峰值走 `--s-ripple-opacity`（MD3 10%）；它**没有 focus 处理**，键盘聚焦态需自己用背板 `background-color: color-mix(in srgb, currentColor 10%, transparent)` 补（用 background 而非 opacity，否则会压暗内部的波纹）；disabled 直接 `display: none` 掉背板最省事
@@ -58,7 +59,12 @@ babel.transformSync(code, { filename: 'x.jsx', presets: ['<项目>/node_modules/
 - **Ripple 的按压是"松手才播"**：`start()` 里 mouse 走 `oneEvent(['pointerup','pointercancel'], run)`、touch 无 delay 时走 `touchend` → **按住期间没有任何视觉**（只有 hover mask）。所以 MD3 要求的"按住时 10% pressed 状态层"必须宿主自己补（属性通道已删，只能靠 `:active` 等 CSS 手段）。
 - 自带 hover 图层是**逐事件判 `pointerType === 'mouse'`**（混合设备上触屏点按不会粘住）。宿主若改用 CSS `&:hover` 则拿不到这层过滤——`:hover` 在触屏点按后会粘住，`@media (any-pointer: fine)` 只看设备能力、救不了混合机型。
 - 无 `SkillManage` 工具时，skill 直接写 `<workspace>/.workbuddy/skills/<name>/SKILL.md`
-- **演示壳层（`src/App.tsx`）**：`html/body/#root` 已由 `normalize.css` 设为 `100vh + overflow: hidden` → 整页天然不滚，左右分栏只需外层 `display: flex; height: 100vh; overflow: hidden` + 两个 pane 各自 `overflow-y: auto`（右栏记得 `min-width: 0`，否则内容会撑破 flex 项）。组件列表用模块级 `demos` 数组 + `createSignal(demos[0])` 存当前项，切换处用 `{active().render()}`。
+- **演示壳层**：`html/body/#root` 已由 `normalize.css` 设为 `100vh + overflow: hidden` → 整页天然不滚，左右分栏只需外层 `display: flex; height: 100vh; overflow: hidden` + 两个 pane 各自 `overflow-y: auto`（右栏记得 `min-width: 0`，否则内容会撑破 flex 项）。`src/App.tsx` 只留壳层（nav + main + 标题/说明），切换用 `createSignal(demos[0])` + `{active().render()}`。
+- **演示模块的目录约定**（每个组件一个文件，别堆回 App.tsx）：
+  - `src/demos/types.ts` → `Demo { name; desc; render: () => JSX.Element }`
+  - `src/demos/DemoList.tsx` → 共用行式布局 `DemoList` / `Row` / `StateText`（同时收着 list/row/caption/state 四个 css）
+  - `src/demos/XxxDemo.tsx` → 一个组件一个文件，导出 `xxxDemo: Demo`；正文函数用 `render: () => <XxxDemo />` 包一层，**别写成 `render: XxxDemo`**——直接赋值会被 `render()` 裸调用，丢掉 `createComponent` 的组件边界（owner）
+  - `src/demos/index.ts` → 注册表 `export const demos: Demo[] = [...]`，顺序 = 侧边栏顺序；新增组件只改这一行
 - **壳层样式用 `css` + `classNames`，别用 `styled`**：`solid-styled-components` 的 `styled` 只 `splitProps(clone, ['as','theme'])`，其余 prop（例如演示用的布尔 `active`）会被 spread 到真实 DOM 上。
 
 ## 4. CSS 易错点（踩过的坑）
