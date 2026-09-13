@@ -94,25 +94,12 @@ const setupRipple = (container: HTMLDivElement, wave: HTMLDivElement, mask: HTML
   };
 
   const hovering = (event: PointerEvent) => {
-    if (!pointerFine.matches || event.pointerType !== 'mouse') return;
-    const force = event.type === 'pointerenter';
-    parent.toggleAttribute('hover', force);
-    if (props.disabledHover) return;
-    mask.classList.toggle('hover', force);
+    if (props.disabledHover || !pointerFine.matches || event.pointerType !== 'mouse') return;
+    mask.classList.toggle('hover', event.type === 'pointerenter');
   };
 
   const down = (event: PointerEvent) => {
     if (event.button !== 0) return;
-    parent.setAttribute('pressed', '');
-    container.classList.add('pressed');
-    const remove = () => {
-      parent.removeAttribute('pressed');
-      container.classList.remove('pressed');
-      document.removeEventListener('pointerup', remove);
-      document.removeEventListener('pointercancel', remove);
-    };
-    document.addEventListener('pointerup', remove);
-    document.addEventListener('pointercancel', remove);
     start(event);
   };
 

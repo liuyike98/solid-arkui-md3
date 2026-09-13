@@ -42,8 +42,11 @@ babel.transformSync(code, { filename: 'x.jsx', presets: ['<项目>/node_modules/
 ```
 
 已验证结论：
-- `<Comp ref={ref} />`（`let ref` 可变绑定）编译为 `ref(r$) { typeof _ref$ === "function" ? _ref$(r$) : ref = r$ }`；Solid 的 `spread` 对 `ref` 执行 `value(node)`，所以 ref **能穿过组件 + props spread 抵达真实 DOM 节点**
-- 但 `<Ripple parent={ref} />` 编译为 `parent: ref`（**非 getter，创建时取值一次**）→ 只有当 ref 在本组件树更靠前的位置被赋值时才拿得到。Ark 的 `Root` 会把 `ref` 留在 `labelprops` 里随 `mergedProps` spread 到 `<ark.label>`，spread 发生在 children 渲染之前，所以这种写法成立。
+- `<Comp ref={ref} />`（`let ref` 可变绑定）编译为 `ref(r$) { typeof _ref$ === "function" ? _ref$(r$) : ref = r$ }`；`ref={setSignal}`（函数）则原样透传成 `ref: setRoot`。Solid 的 `spread` 执行 `typeof props.ref === "function" && use(props.ref, node)`，所以 ref **能**穿过组件 + props spread 抵达真实 DOM 节点
+- ⚠️ **大坑：`parent={ref}` 这种「普通变量」prop 编译成静态值 `parent: ref`，在 props 对象创建时就定格**。而 `spread` 里 children 的 render effect 注册在 ref 之前（`solid-js/web/dist/web.js:305-313`），`createRenderEffect` 又是**立刻嵌套执行**（`solid-js/dist/solid.js:220`），`onMount` 走 `createEffect` 反而排队延后（`solid.js:227` → `Effects ? Effects.push(c) : ...`）
+  → 后果：**子组件创建时 ref 必然还是 `undefined`**。Ripple 会走 `props.parent ?? container.parentElement` 兜底（parent 变成 Control 18px），表现就是"点图标有水波纹、点 label 文字没有"。
+  → 修法：ref 用 `createSignal` + `ref={setRoot}`，传 `parent={root()}`（调用表达式 → 编译成 `get parent()`），把读值推迟到 onMount，那时 ref 已赋值。
+  → 通用规则：**给子组件传 DOM 元素时，prop 必须保持可延迟读取（getter/accessor），不要传裸变量**。这是 Ark/zag 全库用 `MaybeAccessor` 的原因。
 
 ## 3. 本仓库实现约定
 
@@ -51,10 +54,14 @@ babel.transformSync(code, { filename: 'x.jsx', presets: ['<项目>/node_modules/
 - **不写 aria-\***（Ark 内部自带）；children 传了就渲染 `Label`，不传就是裸控件
 - **状态层分工**：MD3 里 Switch **没有**水波纹 → 允许伪元素画状态层；CheckBox/Radio 等**有**水波纹 → 状态层必须是真实元素 + `<Ripple />`，禁用伪元素
 - **Ripple 用法**：容器 `border-radius: inherit` + `overflow: hidden`，即"背板定形、Ripple 填充"；`parent` 默认取 `container.parentElement`（交互宿主）；hover 图层走 `--s-ripple-hover-opacity`（MD3 8%），按压波纹峰值走 `--s-ripple-opacity`（MD3 10%）；它**没有 focus 处理**，键盘聚焦态需自己用背板 `background-color: color-mix(in srgb, currentColor 10%, transparent)` 补（用 background 而非 opacity，否则会压暗内部的波纹）；disabled 直接 `display: none` 掉背板最省事
+- **已按用户决定移除宿主属性通道**：原 mdui 血统里 Ripple 会在 parent 上写 `hover`/`pressed` 裸属性（mdui 那份旧 CSS 里满是 `.mdui-switch[hover]`、`.mdui-button--tonal[hover]:not([pressed])`——那是 shadow DOM 时代跨边界通信的必需品）。本仓库是 light DOM + Ark 的 `data-hover`/`data-active`，属性通道纯属重复，已删；`disabledHover` 语义保留（只控制自带 hover 图层）。**因此 MD3"按住时 10% pressed 层"没有现成信号**，将来要补就用 CSS `:active` 或重新引入状态输出。
+- **Ripple 的按压是"松手才播"**：`start()` 里 mouse 走 `oneEvent(['pointerup','pointercancel'], run)`、touch 无 delay 时走 `touchend` → **按住期间没有任何视觉**（只有 hover mask）。所以 MD3 要求的"按住时 10% pressed 状态层"必须宿主自己补（属性通道已删，只能靠 `:active` 等 CSS 手段）。
+- 自带 hover 图层是**逐事件判 `pointerType === 'mouse'`**（混合设备上触屏点按不会粘住）。宿主若改用 CSS `&:hover` 则拿不到这层过滤——`:hover` 在触屏点按后会粘住，`@media (any-pointer: fine)` 只看设备能力、救不了混合机型。
 - 无 `SkillManage` 工具时，skill 直接写 `<workspace>/.workbuddy/skills/<name>/SKILL.md`
 
 ## 4. CSS 易错点（踩过的坑）
 
 - `inset: 50% auto auto 50%` + `translate: -50% -50%` 才能居中任意尺寸的溢出元素；`inset: 0 + margin: auto` 对**大于容器**的盒子不成立（水平方向负 margin 例外 → 塌到左边），`translate: -50%` 单值只移 x
+- **`display` 不是可动画属性**：用 `display: none/block` 切换的元素（含伪元素）切换状态时是硬切。要动画就让元素**常驻渲染**，改用 `opacity` + `transform` 做交叉淡入淡出（CheckBox 的短横线 ↔ 对勾就是这么改的：短横线常驻 `opacity: 0; transform: scaleX(0.4)`，indeterminate 时 `opacity: 1; transform: none`）。注意 CSS transition 的时长/延迟由**进入态**的规则决定，所以做不到"仅从 indeterminate 进入 checked 时延迟"这种成对定制。
 - Ark 的 `Indicator` 会挂 `[hidden]`，要动画就得 `display: block` 覆盖它（Control 已 `aria-hidden`，无副作用）
 - `Indicator` 用 `inset: -2px` 撑满 control 的 border box（负 inset 做拉伸是安全的）

@@ -1,6 +1,6 @@
 import { css } from 'solid-styled-components';
 import { Checkbox as ArkCheckbox, type CheckboxRootProps } from '@ark-ui/solid';
-import { splitProps } from 'solid-js';
+import { createSignal, splitProps } from 'solid-js';
 import { Ripple } from '@libs/components/Ripple';
 import { classNames } from '@libs/utils/classNames';
 
@@ -8,12 +8,12 @@ export interface CheckBoxProps extends CheckboxRootProps {}
 
 export function CheckBox(props: CheckBoxProps) {
   const [local, restProps] = splitProps(props, ['class', 'children']);
-  let ref!: HTMLLabelElement;
+  const [root, setRoot] = createSignal<HTMLLabelElement>();
 
   return (
-    <ArkCheckbox.Root class={classNames(rootClassName, local.class)} {...restProps} ref={ref}>
-      <ArkCheckbox.Control >
-        <Ripple class='ripple' parent={ref}/>
+    <ArkCheckbox.Root class={classNames(rootClassName, local.class)} {...restProps} ref={setRoot}>
+      <ArkCheckbox.Control>
+        <Ripple class='ripple' parent={root()} />
         <ArkCheckbox.Indicator>
           <svg viewBox='0 0 18 18'>
             <polyline points='4 9 7.5 12.5 14 6' />
@@ -29,7 +29,6 @@ export function CheckBox(props: CheckBoxProps) {
 const rootClassName = css`
   display: flex;
   align-items: center;
-  gap: 8px;
   cursor: pointer;
 
   .ripple {
@@ -44,6 +43,7 @@ const rootClassName = css`
 
   /* 容器: 18dp 大小 / 2dp 圆角 / 2dp 描边, 选中填充 primary */
   [data-part='control'] {
+    margin-right: 10px;
     position: relative;
     box-sizing: border-box;
     width: 18px;
@@ -84,16 +84,14 @@ const rootClassName = css`
         transform ease 200ms;
     }
 
-    &[data-state='checked'] svg,
-    &[data-state='indeterminate'] svg {
+    &[data-state='checked'] svg {
       opacity: 1;
       transform: none;
     }
 
-    /* indeterminate 短横线 */
+    /* indeterminate 短横线: 常驻渲染, 与勾交叉淡入淡出 */
     &::before {
       content: '';
-      display: none;
       position: absolute;
       inset: 0;
       margin: auto;
@@ -101,22 +99,22 @@ const rootClassName = css`
       height: 2px;
       border-radius: 1px;
       background-color: currentColor;
+      opacity: 0;
+      transform: scaleX(0.4);
+      transition:
+        opacity ease 100ms,
+        transform ease 200ms;
     }
 
-    &[data-state='indeterminate'] {
-      & svg {
-        display: none;
-      }
-
-      &::before {
-        display: block;
-      }
+    &[data-state='indeterminate']::before {
+      opacity: 1;
+      transform: none;
     }
   }
 
   [data-part='label'] {
     font-size: 16px;
-    line-height: 24px;
+    line-height: 2;
     user-select: none;
   }
 
