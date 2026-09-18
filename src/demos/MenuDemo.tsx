@@ -1,4 +1,4 @@
-import { Menu } from '@libs/components/Menu';
+import { Menu, MenuItem } from '@libs/components/Menu';
 import { Row } from './DemoList';
 
 export const menuDemo = {
@@ -11,7 +11,10 @@ function MenuDemo() {
   return (
     <div>
       <Row caption='右键菜单'>
-        <Menu></Menu>
+        <Menu>
+          <MenuItem value=''/>
+          <MenuItem value=''/>
+        </Menu>
       </Row>
     </div>
   );
