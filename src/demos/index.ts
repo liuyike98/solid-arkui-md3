@@ -1,6 +1,7 @@
 import { buttonDemo } from './ButtonDemo';
 import { checkBoxDemo } from './CheckBoxDemo';
 import { dialogDemo } from './DialogDemo';
+import { iconButtonDemo } from './IconButtonDemo';
 import { iconDemo } from './IconDemo';
 import { loadingDemo } from './LoadingDemo';
 import { menuDemo } from './MenuDemo';
@@ -20,6 +21,7 @@ export type { Demo } from './types';
 export const demos: Demo[] = [
   buttonDemo,
   iconDemo,
+  iconButtonDemo,
   menuDemo,
   switchDemo,
   checkBoxDemo,

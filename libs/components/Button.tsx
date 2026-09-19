@@ -39,7 +39,7 @@ export function Button(props: ButtonProps) {
       <Show when={local.iconStart}>
         <span class='button-icon'>{local.iconStart}</span>
       </Show>
-      <span class={textClassName}>{local.children}</span>
+      {local.children}
       <Show when={local.iconEnd}>
         <span class='button-icon'>{local.iconEnd}</span>
       </Show>
@@ -189,11 +189,4 @@ const rootClassName = css`
   &[data-variant='outlined']:disabled::before {
     content: none;
   }
-`;
-
-const textClassName = css`
-  min-width: 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
 `;
