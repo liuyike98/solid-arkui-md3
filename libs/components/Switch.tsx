@@ -62,7 +62,7 @@ const rootClassName = css`
       aspect-ratio: 1;
       z-index: 1;
       background-color: var(--mdui-color-outline);
-      transform: scale(0.5);
+      transform: scale(0.55);
       transition: transform ease 200ms;
     }
 
@@ -70,11 +70,11 @@ const rootClassName = css`
       content: '';
       position: absolute;
       display: block;
-      width: 120%;
+      width: 100%;
       aspect-ratio: 1;
       border-radius: 50%;
       background-color: #84848434;
-      transform: scale(0);
+      transform: scale(0.5);
       transition: transform ease 200ms;
     }
 
@@ -100,7 +100,7 @@ const rootClassName = css`
 
     &[data-hover] {
       &::after {
-        transform: scale(1.15);
+        transform: scale(1.5);
       }
     }
 
