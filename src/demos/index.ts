@@ -2,8 +2,10 @@ import { buttonDemo } from './ButtonDemo';
 import { checkBoxDemo } from './CheckBoxDemo';
 import { dialogDemo } from './DialogDemo';
 import { iconDemo } from './IconDemo';
+import { loadingDemo } from './LoadingDemo';
 import { menuDemo } from './MenuDemo';
 import { popoverDemo } from './PopoverDemo';
+import { radioDemo } from './RadioDemo';
 import { scrollAreaDemo } from './ScrollAreaDemo';
 import { sliderDemo } from './SliderDemo';
 import { spinnerDemo } from './SpinnerDemo';
@@ -24,6 +26,8 @@ export const demos: Demo[] = [
   sliderDemo,
   spinnerDemo,
   tooltipDemo,
+  loadingDemo,
+  radioDemo,
   popoverDemo,
   dialogDemo,
   toastDemo,
