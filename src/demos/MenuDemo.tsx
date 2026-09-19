@@ -1,6 +1,16 @@
 import { Button } from '@libs/components/Button';
 import { Icon } from '@libs/components/Icon';
-import { Menu, MenuContent, MenuContextTrigger, MenuGroup, MenuGroupLabel, MenuItem, MenuItemTrigger, MenuSeparator, MenuTrigger } from '@libs/components/Menu';
+import {
+  BindMenu,
+  MenuContent,
+  MenuContextTrigger,
+  MenuGroup,
+  MenuGroupLabel,
+  MenuItem,
+  MenuItemTrigger,
+  MenuSeparator,
+  MenuTrigger,
+} from '@libs/components/Menu';
 import { createSignal, For } from 'solid-js';
 import { css } from 'solid-styled-components';
 import { DemoList, Row, StateText } from './DemoList';
@@ -18,30 +28,28 @@ const fileItems = [
   { value: 'save', label: '保存', icon: 'save' },
 ] as const;
 
+function MenuBuilder() {
+  return (
+    <>
+      <MenuItem value='1' icon='content_copy'>复制</MenuItem>
+      <MenuItem value='2' icon='content_copy'>复制</MenuItem>
+      <MenuItem value='3' icon='content_copy'>复制</MenuItem>
+    </>
+  );
+}
+
 function MenuDemo() {
   const [selected, setSelected] = createSignal('');
 
   return (
     <DemoList>
       <Row caption='基础'>
-        <Menu open onSelect={(details) => setSelected(details.value)}>
-          <MenuTrigger>
-            <Button variant='outlined'>
-              File
-              <Icon name='expand_more' size={20} />
-            </Button>
-          </MenuTrigger>
-          <MenuContent>
-            <For each={fileItems}>{(item) => <MenuItem value={item.value} icon={item.icon}>{item.label}</MenuItem>}</For>
-            <MenuSeparator />
-            <MenuItem value='exit' icon='logout'>
-              退出
-            </MenuItem>
-          </MenuContent>
-        </Menu>
+        <BindMenu menuContent={<MenuBuilder />}>
+          <Button />
+        </BindMenu>
         <StateText>最近选择: {selected() || '-'}</StateText>
       </Row>
-      <Row caption='分组与禁用'>
+      {/* <Row caption='分组与禁用'>
         <Menu>
           <MenuTrigger>
             <Button variant='tonal'>分组菜单</Button>
@@ -104,21 +112,21 @@ function MenuDemo() {
           </MenuContent>
         </Menu>
       </Row>
-      <Row caption='右键菜单'>
-        <Menu>
-          <MenuContextTrigger>
-            <div class={contextBoxClassName}>在此区域点击右键</div>
-          </MenuContextTrigger>
-          <MenuContent>
-            <MenuItem value='refresh' icon='refresh'>
-              刷新
-            </MenuItem>
-            <MenuItem value='inspect' icon='build'>
-              检查
-            </MenuItem>
-          </MenuContent>
-        </Menu>
-      </Row>
+      <Row caption='右键菜单'> */}
+      {/* <Menu>
+        <MenuContextTrigger>
+          <div class={contextBoxClassName}>在此区域点击右键</div>
+        </MenuContextTrigger>
+        <MenuContent>
+          <MenuItem value='refresh' icon='refresh'>
+            刷新
+          </MenuItem>
+          <MenuItem value='inspect' icon='build'>
+            检查
+          </MenuItem>
+        </MenuContent>
+      </Menu> */}
+      {/* </Row> */}
     </DemoList>
   );
 }

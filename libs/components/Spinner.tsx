@@ -88,7 +88,7 @@ const rootClassName = css`
 
   /* 轨道只画进度弧之外的剩余段, 两端各留 dash-gap, 与 Sober 一致 */
   .track {
-    stroke: var(--mdui-color-primary-container);
+    stroke: var(--mdui-color-secondary-container);
   }
 
   .indicator {

@@ -83,13 +83,13 @@ const rootClassName = css`
     }
   }
 
-  /* 轨道: 8dp 全圆角, 未激活 #e3e5c2; 内部用 flex 拼「已激活 + 剩余」两段 */
+  /* 轨道: 8dp 全圆角, 未激活 secondaryContainer (与 Progress 底槽一致); 内部用 flex 拼「已激活 + 剩余」两段 */
   [data-part='track'] {
     display: flex;
     width: 100%;
     height: 100%;
     border-radius: 999px;
-    background-color: var(--mdui-color-primary-container);
+    background-color: var(--mdui-color-secondary-container);
 
     .range-left {
       border-radius: 999px;
@@ -101,7 +101,7 @@ const rootClassName = css`
     }
 
     .range-right {
-      background-color: var(--mdui-color-primary-container);
+      background-color: var(--mdui-color-secondary-container);
     }
   }
 

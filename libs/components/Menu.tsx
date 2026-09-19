@@ -21,8 +21,24 @@ export interface MenuItemProps extends ArkMenuItemProps {
   icon?: MaterialIcon;
 }
 
-export function Menu(props: MenuProps) {
+function Menu(props: MenuProps) {
   return <ArkMenu.Root {...props} />;
+}
+
+export interface BindMenuProps {
+  children?: JSX.Element;
+  menuContent: JSX.Element | JSX.Element[]
+}
+
+export function BindMenu(props: BindMenuProps) {
+  return (
+    <Menu>
+      <MenuTrigger>{props.children}</MenuTrigger>
+      <MenuContent>
+        {props.menuContent}
+      </MenuContent>
+    </Menu>
+  );
 }
 
 /** 打开菜单的触发按钮 (无边框包裹, 内部放任意内容) */
@@ -65,7 +81,7 @@ export function MenuItem(props: MenuItemProps) {
     <ArkMenu.Item {...restProps} class={classNames(itemClassName, local.class)}>
       <Show when={local.icon}>
         <span class='menu-item-icon'>
-          <Icon name={local.icon!} size={20} />
+          <Icon name={local.icon!} size={16} />
         </span>
       </Show>
       <ArkMenu.ItemText>{local.children}</ArkMenu.ItemText>
@@ -184,14 +200,14 @@ const itemClassName = css`
   position: relative;
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 8px;
   box-sizing: border-box;
   min-height: 36px;
   padding: 0 12px;
   outline: none;
   overflow: hidden;
   color: var(--mdui-color-on-surface-variant);
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 500;
   line-height: 20px;
   user-select: none;

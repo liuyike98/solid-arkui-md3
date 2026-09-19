@@ -6,6 +6,7 @@ import { iconDemo } from './IconDemo';
 import { loadingDemo } from './LoadingDemo';
 import { menuDemo } from './MenuDemo';
 import { popoverDemo } from './PopoverDemo';
+import { progressDemo } from './ProgressDemo';
 import { radioDemo } from './RadioDemo';
 import { scrollAreaDemo } from './ScrollAreaDemo';
 import { sliderDemo } from './SliderDemo';
@@ -30,6 +31,7 @@ export const demos: Demo[] = [
   tooltipDemo,
   loadingDemo,
   radioDemo,
+  progressDemo,
   popoverDemo,
   dialogDemo,
   toastDemo,
