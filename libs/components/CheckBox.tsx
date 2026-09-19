@@ -50,18 +50,18 @@ const rootClassName = css`
     box-sizing: border-box;
     width: 18px;
     height: 18px;
-    border: 2px solid #78786a;
+    border: 2px solid var(--mdui-color-outline);
     border-radius: 2px;
-    color: #78786a;
+    color: var(--mdui-color-outline);
     transition:
       background-color ease 150ms,
       border-color ease 150ms;
 
     &[data-state='checked'],
     &[data-state='indeterminate'] {
-      background-color: #596400;
-      border-color: #596400;
-      color: #596400;
+      background-color: var(--mdui-color-primary);
+      border-color: var(--mdui-color-primary);
+      color: var(--mdui-color-primary);
     }
   }
 
@@ -70,7 +70,7 @@ const rootClassName = css`
     display: block;
     position: absolute;
     inset: -2px;
-    color: #ffffff;
+    color: var(--mdui-color-on-primary);
 
     & svg {
       display: block;

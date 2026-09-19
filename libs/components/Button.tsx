@@ -65,8 +65,8 @@ const rootClassName = css`
   padding: 0 16px;
   border: none;
   border-radius: 20px;
-  background-color: #596400;
-  color: #ffffff;
+  background-color: var(--mdui-color-primary);
+  color: var(--mdui-color-on-primary);
   font-family: inherit;
   font-size: 14px;
   font-weight: 500;
@@ -100,16 +100,16 @@ const rootClassName = css`
   }
 
   &[data-variant='elevated'] {
-    background-color: #ffffff;
-    color: #596400;
+    background-color: var(--mdui-color-surface-container-low);
+    color: var(--mdui-color-primary);
     box-shadow:
       0 1px 2px 0 rgb(0 0 0 / 20%),
       0 1px 3px 1px rgb(0 0 0 / 10%);
   }
 
   &[data-variant='tonal'] {
-    background-color: #e3e5c2;
-    color: #596400;
+    background-color: var(--mdui-color-secondary-container);
+    color: var(--mdui-color-on-secondary-container);
   }
 
   &[data-variant='tonal']:hover:not(:active) {
@@ -120,7 +120,7 @@ const rootClassName = css`
 
   &[data-variant='outlined'] {
     background-color: transparent;
-    color: #4e4e4e;
+    color: var(--mdui-color-on-surface-variant);
   }
 
   /* 描边用伪元素, 避免 border 挤压内容宽度 */
@@ -129,13 +129,13 @@ const rootClassName = css`
     position: absolute;
     inset: 0;
     pointer-events: none;
-    border: 1px solid #78786a;
+    border: 1px solid var(--mdui-color-outline);
     border-radius: inherit;
   }
 
   &[data-variant='text'] {
     background-color: transparent;
-    color: #596400;
+    color: var(--mdui-color-primary);
   }
 
   &[data-size='extra-small'] {
@@ -182,8 +182,8 @@ const rootClassName = css`
   &:disabled {
     pointer-events: none;
     box-shadow: none;
-    background-color: #4e4e4e1f;
-    color: #4e4e4e61;
+    background-color: color-mix(in srgb, var(--mdui-color-on-surface) 12%, transparent);
+    color: color-mix(in srgb, var(--mdui-color-on-surface) 38%, transparent);
   }
 
   &[data-variant='outlined']:disabled::before {

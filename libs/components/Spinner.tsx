@@ -73,7 +73,7 @@ const rootClassName = css`
   display: inline-block;
   vertical-align: middle;
   aspect-ratio: 1;
-  color: #596400;
+  color: var(--mdui-color-primary);
 
   .track,
   .indicator {
@@ -88,7 +88,7 @@ const rootClassName = css`
 
   /* 轨道只画进度弧之外的剩余段, 两端各留 dash-gap, 与 Sober 一致 */
   .track {
-    stroke: #e3e5c2;
+    stroke: var(--mdui-color-primary-container);
   }
 
   .indicator {
@@ -208,5 +208,5 @@ const textClassName = css`
   align-items: center;
   justify-content: center;
   font-size: 12px;
-  color: #4e4e4e;
+  color: var(--mdui-color-on-surface-variant);
 `;

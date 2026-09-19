@@ -27,14 +27,18 @@ const rootClassName = css`
     position: relative;
     width: 48px;
     height: 28px;
-    border: 2px solid #596400;
+    /* M3: 未选中描边 outline, 选中变 primary */
+    border: 2px solid var(--mdui-color-outline);
     border-radius: 999px;
-    background-color: #e5e2da;
+    background-color: var(--mdui-color-surface-container-highest);
     display: flex;
-    transition: background-color ease 150ms;
+    transition:
+      background-color ease 150ms,
+      border-color ease 150ms;
 
     &[data-state='checked'] {
-      background-color: #596400;
+      background-color: var(--mdui-color-primary);
+      border-color: var(--mdui-color-primary);
     }
   }
 
@@ -57,7 +61,7 @@ const rootClassName = css`
       width: 100%;
       aspect-ratio: 1;
       z-index: 1;
-      background-color: #78786a;
+      background-color: var(--mdui-color-outline);
       transform: scale(0.5);
       transition: transform ease 200ms;
     }
@@ -86,7 +90,7 @@ const rootClassName = css`
       translate: -100%;
 
       &::before {
-        background-color: #ffffff;
+        background-color: var(--mdui-color-on-primary);
         transform: scale(0.85);
       }
 

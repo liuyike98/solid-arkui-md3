@@ -24,7 +24,7 @@ export function StateText(props: { children: JSX.Element }) {
 const listClassName = css`
   max-width: 640px;
   margin-top: 24px;
-  border: 1px solid #e5e2da;
+  border: 1px solid var(--mdui-color-outline-variant);
   border-radius: 12px;
 `;
 
@@ -35,7 +35,7 @@ const rowClassName = css`
   padding: 16px 20px;
 
   & + & {
-    border-top: 1px solid #e5e2da;
+    border-top: 1px solid var(--mdui-color-outline-variant);
   }
 `;
 
@@ -43,12 +43,12 @@ const captionClassName = css`
   flex: none;
   width: 132px;
   font-size: 14px;
-  color: #78786a;
+  color: var(--mdui-color-outline);
 `;
 
 const stateClassName = css`
   margin-left: auto;
   font-size: 14px;
-  color: #78786a;
+  color: var(--mdui-color-outline);
   min-width: 100px;
 `;

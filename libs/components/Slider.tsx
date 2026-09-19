@@ -89,19 +89,19 @@ const rootClassName = css`
     width: 100%;
     height: 100%;
     border-radius: 999px;
-    background-color: #e3e5c2;
+    background-color: var(--mdui-color-primary-container);
 
     .range-left {
       border-radius: 999px;
-      background-color: #596400;
+      background-color: var(--mdui-color-primary);
     }
 
     .range-center {
-      background-color: #596400;
+      background-color: var(--mdui-color-primary);
     }
 
     .range-right {
-      background-color: #e3e5c2;
+      background-color: var(--mdui-color-primary-container);
     }
   }
 
@@ -118,7 +118,7 @@ const rootClassName = css`
       height: 100%;
       aspect-ratio: 1;
       border-radius: 50%;
-      background-color: #596400;
+      background-color: var(--mdui-color-primary);
       z-index: 1;
     }
 
@@ -156,8 +156,8 @@ const rootClassName = css`
     min-width: 40px;
     padding: 4px;
     border-radius: 999px;
-    color: white;
-    background-color: #4e4e4e;
+    color: var(--mdui-color-inverse-on-surface);
+    background-color: var(--mdui-color-inverse-surface);
     font-size: 13px;
     scale: 0;
     transition: scale 150ms ease;

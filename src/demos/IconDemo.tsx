@@ -72,13 +72,13 @@ const gridClassName = css`
 `;
 
 const redClassName = css`
-  color: #ba1a1a;
+  color: var(--mdui-color-error);
 `;
 
 const greenClassName = css`
-  color: #006d3d;
+  color: var(--mdui-color-success);
 `;
 
 const blueClassName = css`
-  color: #00658e;
+  color: var(--mdui-color-primary);
 `;

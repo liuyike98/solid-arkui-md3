@@ -71,8 +71,8 @@ const contentClassName = css`
   max-width: 250px;
   padding: 6px 10px;
   border-radius: 6px;
-  background-color: #4e4e4e;
-  color: #ffffff;
+  background-color: var(--mdui-color-inverse-surface);
+  color: var(--mdui-color-inverse-on-surface);
   font-size: 12px;
   font-weight: 400;
   line-height: 16px;

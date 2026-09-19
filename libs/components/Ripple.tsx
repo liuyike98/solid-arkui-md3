@@ -144,8 +144,8 @@ const containerClassName = css`
   pointer-events: none;
   border-radius: inherit;
   overflow: hidden;
-  animation-duration: var(--s-motion-duration-long4, 600ms);
-  animation-timing-function: var(--s-motion-easing-standard, cubic-bezier(0.2, 0, 0, 1));
+  animation-duration: var(--mdui-motion-duration-long4, 600ms);
+  animation-timing-function: var(--mdui-motion-easing-standard, cubic-bezier(0.2, 0, 0, 1));
 
   @media (prefers-reduced-motion: reduce) {
     animation-duration: 0s;
@@ -158,11 +158,11 @@ const maskClassName = css`
   animation-duration: inherit;
   animation-timing-function: inherit;
   opacity: 0;
-  transition: opacity var(--s-motion-duration-short4, 200ms) var(--s-motion-easing-standard, cubic-bezier(0.2, 0, 0, 1));
-  background: var(--s-ripple-color, currentColor);
+  transition: opacity var(--mdui-motion-duration-short4, 200ms) var(--mdui-motion-easing-standard, cubic-bezier(0.2, 0, 0, 1));
+  background: var(--mdui-ripple-color, currentColor);
 
   &.hover {
-    opacity: var(--s-ripple-hover-opacity, 0.1);
+    opacity: var(--mdui-ripple-hover-opacity, 0.1);
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -177,6 +177,6 @@ const waveClassName = css`
   animation-timing-function: inherit;
   opacity: 0;
   border-radius: 50%;
-  background: var(--s-ripple-color, currentColor);
-  filter: opacity(var(--s-ripple-opacity, 0.24));
+  background: var(--mdui-ripple-color, currentColor);
+  filter: opacity(var(--mdui-ripple-opacity, 0.24));
 `;
