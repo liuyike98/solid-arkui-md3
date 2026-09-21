@@ -1,3 +1,4 @@
+import { alertDemo } from './AlertDemo';
 import { buttonDemo } from './ButtonDemo';
 import { checkBoxDemo } from './CheckBoxDemo';
 import { dialogDemo } from './DialogDemo';
@@ -40,4 +41,5 @@ export const demos: Demo[] = [
   toastDemo,
   scrollAreaDemo,
   textFieldDemo,
+  alertDemo,
 ];
