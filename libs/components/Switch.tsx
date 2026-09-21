@@ -73,7 +73,8 @@ const rootClassName = css`
       width: 100%;
       aspect-ratio: 1;
       border-radius: 50%;
-      background-color: #84848434;
+      /* 未选中: 中性状态层 (MD3 规范 on-surface 10%) */
+      background-color: color-mix(in srgb, var(--mdui-color-on-surface) 10%, transparent);
       transform: scale(0.5);
       transition: transform ease 200ms;
     }
@@ -92,6 +93,11 @@ const rootClassName = css`
       &::before {
         background-color: var(--mdui-color-on-primary);
         transform: scale(0.85);
+      }
+
+      /* 选中: 主题色状态层 */
+      &::after {
+        background-color: color-mix(in srgb, var(--mdui-color-primary) 15%, transparent);
       }
 
       &[data-active] {
