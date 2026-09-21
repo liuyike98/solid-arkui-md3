@@ -12,15 +12,24 @@ interface TextFieldProps extends Omit<JSX.HTMLAttributes<HTMLDivElement>, 'onInp
   value?: string;
   defaultValue?: string;
   placeholder?: string;
+  /** 必填: 标签后追加红色星号 */
+  required?: boolean;
+  /** 底部辅助文案 */
+  helper?: JSX.Element;
+  /** 错误文案: 存在即进入错误态 */
+  error?: JSX.Element;
+  /** 强制错误态 (无文案也可标红) */
+  invalid?: boolean;
   onInput?: (event: InputEvent & { currentTarget: HTMLInputElement | HTMLTextAreaElement }) => void;
 }
 
 export function TextField(props: TextFieldProps) {
-  const [local, rest] = splitProps(props, ['class', 'label', 'disabled', 'type', 'iconStart', 'iconEnd', 'value', 'defaultValue', 'placeholder', 'onInput']);
+  const [local, rest] = splitProps(props, ['class', 'label', 'disabled', 'type', 'iconStart', 'iconEnd', 'value', 'defaultValue', 'placeholder', 'required', 'helper', 'error', 'invalid', 'onInput']);
   /* 初始态同步取自 value/defaultValue, 有默认值时首帧即浮起, 避免入场播放标签动画 */
   const [hasText, setHasText] = createSignal((local.value ?? local.defaultValue ?? '') !== '');
   const [focused, setFocused] = createSignal(false);
   const floated = () => focused() || hasText();
+  const invalid = () => !!local.error || !!local.invalid;
   /* 受控模式: 外部 signal 改 value 不触发 onInput, 需响应式同步标签浮起态 */
   createEffect(() => {
     const value = local.value;
@@ -60,45 +69,57 @@ export function TextField(props: TextFieldProps) {
       data-float={floated() ? '' : undefined}
       data-focused={focused() ? '' : undefined}
       data-disabled={local.disabled ? '' : undefined}
+      data-invalid={invalid() ? '' : undefined}
       data-icon-start={local.iconStart ? '' : undefined}
       data-icon-end={local.iconEnd ? '' : undefined}
     >
-      <div class='field-border' data-notch-pending={!notchReady() ? '' : undefined} style={{ 'clip-path': clipPath() }} />
-      <Show when={local.iconStart}>
-        <span class='field-icon'>{local.iconStart}</span>
-      </Show>
-      <div class='field-content' ref={content!}>
-        <Show when={props.label}>
-          <div class='text-field-label' ref={label!}>
-            {props.label}
-          </div>
+      <div class='field-row'>
+        <div class='field-border' data-notch-pending={!notchReady() ? '' : undefined} style={{ 'clip-path': clipPath() }} />
+        <Show when={local.iconStart}>
+          <span class='field-icon'>{local.iconStart}</span>
         </Show>
-        <input
-          type={local.type ?? 'text'}
-          disabled={local.disabled}
-          /* 不单独传 defaultValue: el.value='' 会先置 dirty 使其失效, 直接并入初值链 */
-          value={local.value ?? local.defaultValue ?? ''}
-          placeholder={local.placeholder}
-          onInput={(event) => {
-            setHasText(event.currentTarget.value !== '');
-            local.onInput?.(event);
-          }}
-          onFocus={() => setFocused(true)}
-          onBlur={() => setFocused(false)}
-        />
+        <div class='field-content' ref={content!}>
+          <Show when={props.label}>
+            <div class='text-field-label' ref={label!}>
+              {props.label}
+              <Show when={local.required}>
+                <span class='field-required'> *</span>
+              </Show>
+            </div>
+          </Show>
+          <input
+            type={local.type ?? 'text'}
+            disabled={local.disabled}
+            /* 不单独传 defaultValue: el.value='' 会先置 dirty 使其失效, 直接并入初值链 */
+            value={local.value ?? local.defaultValue ?? ''}
+            placeholder={local.placeholder}
+            onInput={(event) => {
+              setHasText(event.currentTarget.value !== '');
+              local.onInput?.(event);
+            }}
+            onFocus={() => setFocused(true)}
+            onBlur={() => setFocused(false)}
+          />
+        </div>
+        <Show when={local.iconEnd}>
+          <span class='field-icon'>{local.iconEnd}</span>
+        </Show>
       </div>
-      <Show when={local.iconEnd}>
-        <span class='field-icon'>{local.iconEnd}</span>
+      <Show when={invalid() ? local.error : local.helper}>
+        <div class='field-support'>
+          <span class={invalid() ? 'field-error' : 'field-helper'}>{invalid() ? local.error : local.helper}</span>
+        </div>
       </Show>
     </div>
   );
 }
 
 export function TextArea(props: TextFieldProps) {
-  const [local, rest] = splitProps(props, ['class', 'label', 'disabled', 'value', 'defaultValue', 'placeholder', 'onInput']);
+  const [local, rest] = splitProps(props, ['class', 'label', 'disabled', 'value', 'defaultValue', 'placeholder', 'required', 'helper', 'error', 'invalid', 'onInput']);
   const [hasText, setHasText] = createSignal((local.value ?? local.defaultValue ?? '') !== '');
   const [focused, setFocused] = createSignal(false);
   const floated = () => focused() || hasText();
+  const invalid = () => !!local.error || !!local.invalid;
 
   let ta: HTMLTextAreaElement = undefined!;
   const resize = () => {
@@ -136,27 +157,38 @@ export function TextArea(props: TextFieldProps) {
       data-float={floated() ? '' : undefined}
       data-focused={focused() ? '' : undefined}
       data-disabled={local.disabled ? '' : undefined}
+      data-invalid={invalid() ? '' : undefined}
     >
-      <div class='field-border' data-notch-pending={!notchReady() ? '' : undefined} style={{ 'clip-path': clipPath() }} />
-      <Show when={props.label}>
-        <div class='text-field-label' ref={label!}>
-          {props.label}
+      <div class='field-row'>
+        <div class='field-border' data-notch-pending={!notchReady() ? '' : undefined} style={{ 'clip-path': clipPath() }} />
+        <Show when={props.label}>
+          <div class='text-field-label' ref={label!}>
+            {props.label}
+            <Show when={local.required}>
+              <span class='field-required'> *</span>
+            </Show>
+          </div>
+        </Show>
+        <textarea
+          rows={1}
+          disabled={local.disabled}
+          value={local.value ?? local.defaultValue ?? ''}
+          placeholder={local.placeholder}
+          ref={ta!}
+          onInput={(event) => {
+            setHasText(event.currentTarget.value !== '');
+            resize();
+            local.onInput?.(event);
+          }}
+          onFocus={() => setFocused(true)}
+          onBlur={() => setFocused(false)}
+        />
+      </div>
+      <Show when={invalid() ? local.error : local.helper}>
+        <div class='field-support'>
+          <span class={invalid() ? 'field-error' : 'field-helper'}>{invalid() ? local.error : local.helper}</span>
         </div>
       </Show>
-      <textarea
-        rows={1}
-        disabled={local.disabled}
-        value={local.value ?? local.defaultValue ?? ''}
-        placeholder={local.placeholder}
-        ref={ta!}
-        onInput={(event) => {
-          setHasText(event.currentTarget.value !== '');
-          resize();
-          local.onInput?.(event);
-        }}
-        onFocus={() => setFocused(true)}
-        onBlur={() => setFocused(false)}
-      />
     </div>
   );
 }
@@ -164,8 +196,7 @@ export function TextArea(props: TextFieldProps) {
 const defaultStyle = css`
   box-sizing: border-box;
   display: flex;
-  flex-direction: row;
-  align-items: center;
+  flex-direction: column;
   position: relative;
 
   input,
@@ -181,8 +212,16 @@ const defaultStyle = css`
 
 const PADDING_LEFT: string = '12px';
 const textFieldStyle = css`
-  height: 40px;
   font-size: 15px;
+
+  /* 输入行: 边框 overlay / 图标 / 内容都相对这一层 */
+  .field-row {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    position: relative;
+    height: 40px;
+  }
 
   /* 单 div 真边框 overlay; 缺口由内联 clip-path 在顶边裁出 */
   .field-border {
@@ -207,8 +246,8 @@ const textFieldStyle = css`
       outline-color ease 240ms;
   }
 
-  /* hover: 灰色 2px (点亮 outline 内圈, 边框色不变); 禁用态不响应 */
-  &:not([data-disabled]):hover .field-border {
+  /* hover: 灰色 2px (点亮 outline 内圈, 边框色不变); 禁用/错误态不响应 */
+  &:not([data-disabled]):not([data-invalid]):hover .field-border {
     outline-color: var(--mdui-color-outline);
   }
 
@@ -237,6 +276,30 @@ const textFieldStyle = css`
     padding: 0 4px;
     color: var(--mdui-color-on-surface-variant);
     transition: color ease 200ms;
+  }
+
+  /* 底部辅助/错误文案行 */
+  .field-support {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    box-sizing: border-box;
+    padding: 0 ${PADDING_LEFT};
+    margin-top: 4px;
+    font-size: 12px;
+    line-height: 16px;
+  }
+
+  .field-helper {
+    color: var(--mdui-color-on-surface-variant);
+  }
+
+  .field-error {
+    color: var(--mdui-color-error);
+  }
+
+  .field-required {
+    color: var(--mdui-color-error);
   }
 
   input {
@@ -306,7 +369,21 @@ const textFieldStyle = css`
     color: var(--mdui-color-primary);
   }
 
-  /* 禁用态 (MD3): 边框 12% / 文字与标签 38% on-surface; 置于最后覆盖浮起/聚焦色 */
+  /* 错误态 (error 文案或 invalid): 边框标红; 聚焦时 2px 也用 error 色 */
+  &[data-invalid] .field-border {
+    border-color: var(--mdui-color-error);
+  }
+
+  &[data-invalid][data-focused] .field-border {
+    border-color: var(--mdui-color-error);
+    outline-color: var(--mdui-color-error);
+  }
+
+  &[data-invalid][data-float] .text-field-label {
+    color: var(--mdui-color-error);
+  }
+
+  /* 禁用态 (MD3): 边框 12% / 文字与标签 38% on-surface; 置于最后覆盖浮起/聚焦/错误色 */
   &[data-disabled] {
     .field-border {
       border-color: color-mix(in srgb, var(--mdui-color-on-surface) 12%, transparent);
@@ -328,10 +405,12 @@ const textFieldStyle = css`
   }
 `;
 
-/* 多行差异: 高度随内容自适应 (JS 测 scrollHeight), 空态与单行等高; padding 5px 使首行 = 5+30+5 = 40px */
+/* 多行差异: 高度随内容自适应 (JS 测 scrollHeight), 空态与单行等高 */
 const textAreaStyle = css`
-  height: auto;
-  align-items: flex-start;
+  .field-row {
+    height: auto;
+    align-items: flex-start;
+  }
 
   textarea {
     line-height: 24px;
@@ -344,6 +423,6 @@ const textAreaStyle = css`
   }
 
   .text-field-label {
-    top: 20px; /* 首行中心 = 上 padding 5 + 行高 30 / 2 */
+    top: 20px; /* 首行中心 = 上 padding 8 + 行高 24 / 2 */
   }
 `;
