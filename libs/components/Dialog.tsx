@@ -94,12 +94,12 @@ const triggerClassName = css`
   cursor: default;
 `;
 
-/* MD3 scrim */
+/* Sober 同款遮罩: 纯黑 75% (sober dialog ::backdrop = scrim + opacity .75) */
 const backdropClassName = css`
   position: fixed;
   inset: 0;
   z-index: 1000;
-  background-color: rgb(0 0 0 / 32%);
+  background-color: rgb(0 0 0 / 75%);
 
   &[data-state='open'] {
     animation: mdui-dialog-backdrop-in 200ms cubic-bezier(0.2, 0, 0, 1);

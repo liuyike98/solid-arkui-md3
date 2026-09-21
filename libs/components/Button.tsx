@@ -25,7 +25,7 @@ export function Button(props: ButtonProps) {
     'iconStart',
     'iconEnd',
     'children',
-    'disabled',
+
   ]);
 
   return (
@@ -43,7 +43,7 @@ export function Button(props: ButtonProps) {
       <Show when={local.iconEnd}>
         <span class='button-icon'>{local.iconEnd}</span>
       </Show>
-      <Show when={!local.disabled}>
+      <Show when={!props.disabled}>
         <Ripple />
       </Show>
     </button>

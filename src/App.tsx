@@ -8,7 +8,7 @@ import { demos } from './demos';
 
 /** 导航底部主题色选择器: 种子色预设 */
 const SEED_PRESETS = [
-  { label: '橄榄', seed: '#596400' },
+  { label: '橄榄', seed: '#9bd67f' },
   { label: '海蓝', seed: '#00658e' },
   { label: '紫罗兰', seed: '#6750a4' },
 ];

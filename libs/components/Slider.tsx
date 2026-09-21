@@ -128,13 +128,14 @@ const rootClassName = css`
       height: 100%;
       aspect-ratio: 1;
       border-radius: 50%;
-      background-color: #a3a3a35a;
+      /* hover/拖拽扩散圈: primary 10%, 跟随主题色 (MD3 中性状态层用 on-surface, 会呈灰色) */
+      background-color: color-mix(in srgb, var(--mdui-color-primary) 10%, transparent);
       transition: height 150ms ease;
     }
 
     &:hover::after,
     &[data-dragging]::after {
-      height: 200%;
+      height: 230%;
     }
   }
 
@@ -206,7 +207,7 @@ const rootClassName = css`
 
     /* 气泡在 thumb 上方: -200% = 2 个 thumb 高 */
     [data-part='dragging-indicator'] {
-      bottom: 170%;
+      bottom: 185%;
 
     }
   }
@@ -249,7 +250,7 @@ const rootClassName = css`
      * 竖向 Ark 不给 left, 所以这条不会被 inline 样式压掉。
      */
     [data-part='dragging-indicator'] {
-      left: 170%;
+      left: 185%;
     }
   }
 

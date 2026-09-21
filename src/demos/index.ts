@@ -9,9 +9,11 @@ import { popoverDemo } from './PopoverDemo';
 import { progressDemo } from './ProgressDemo';
 import { radioDemo } from './RadioDemo';
 import { scrollAreaDemo } from './ScrollAreaDemo';
+import { selectDemo } from './SelectDemo';
 import { sliderDemo } from './SliderDemo';
 import { spinnerDemo } from './SpinnerDemo';
 import { switchDemo } from './SwitchDemo';
+import { textFieldDemo } from './TextFieldDemo';
 import { toastDemo } from './ToastDemo';
 import { tooltipDemo } from './TooltipDemo';
 import type { Demo } from './types';
@@ -28,6 +30,7 @@ export const demos: Demo[] = [
   checkBoxDemo,
   sliderDemo,
   spinnerDemo,
+  selectDemo,
   tooltipDemo,
   loadingDemo,
   radioDemo,
@@ -36,4 +39,5 @@ export const demos: Demo[] = [
   dialogDemo,
   toastDemo,
   scrollAreaDemo,
+  textFieldDemo,
 ];
