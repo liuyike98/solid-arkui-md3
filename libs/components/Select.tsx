@@ -2,6 +2,7 @@ import { Select as ArkSelect, type SelectRootProps } from '@ark-ui/solid/select'
 import { createListCollection } from '@ark-ui/solid/collection';
 import { Icon } from '@libs/components/Icon';
 import { FieldSet } from '@libs/components/FieldSet';
+import { Ripple } from '@libs/components/Ripple';
 import { For, Show, splitProps, type JSX } from 'solid-js';
 import { Portal } from 'solid-js/web';
 import { css } from 'solid-styled-components';
@@ -78,6 +79,9 @@ export function Select(props: SelectProps) {
                     <Icon name='check' size={20} />
                   </ArkSelect.ItemIndicator>
                   <ArkSelect.ItemText>{option.label}</ArkSelect.ItemText>
+                  <Show when={!option.disabled}>
+                    <Ripple disabledHover={true} />
+                  </Show>
                 </ArkSelect.Item>
               )}
             </For>
@@ -188,11 +192,14 @@ const contentClassName = css`
   box-sizing: border-box;
   position: relative;
   z-index: 1000;
-  min-width: var(--reference-width, 160px);
+  /* --reference-width 是 trigger 宽, trigger 在 body 内缩了 12px x2;
+     用 margin + calc 把参考框撑回 FieldSet 外沿, 面板与组件严格等宽 */
+  min-width: calc(var(--reference-width, 160px) + 24px);
+  margin-left: -12px;
   max-height: min(var(--available-height, 320px), 320px);
   overflow-y: auto;
-  padding: 8px 0;
-  border-radius: 12px;
+  padding: 4px 0;
+  border-radius: 8px;
   background-color: var(--mdui-color-surface-container);
   color: var(--mdui-color-on-surface);
   font-family: inherit;
@@ -209,32 +216,32 @@ const contentClassName = css`
   }
 
   &[data-state='open'] {
-    animation: mdui-select-in 150ms cubic-bezier(0.2, 0, 0, 1);
+    animation: mdui-select-open 180ms cubic-bezier(0.2, 0, 0, 1);
   }
 
   &[data-state='closed'] {
-    animation: mdui-select-out 100ms cubic-bezier(0.3, 0, 1, 1);
+    animation: mdui-select-close 200ms cubic-bezier(0.3, 0, 1, 1);
   }
 
-  @keyframes mdui-select-in {
+  @keyframes mdui-select-open {
     from {
       opacity: 0;
-      transform: scale(0.94);
+      transform: scale(1) translateY(-12px);
     }
     to {
       opacity: 1;
-      transform: scale(1);
+      transform: scale(1) translateY(0);
     }
   }
 
-  @keyframes mdui-select-out {
+  @keyframes mdui-select-close {
     from {
       opacity: 1;
-      transform: scale(1);
+      transform: scale(1) translateY(0);
     }
     to {
       opacity: 0;
-      transform: scale(0.94);
+      transform: scale(1) translateY(-10px);
     }
   }
 `;
