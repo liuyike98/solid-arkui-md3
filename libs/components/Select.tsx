@@ -199,6 +199,8 @@ const contentClassName = css`
   max-height: min(var(--available-height, 320px), 320px);
   overflow-y: auto;
   padding: 4px 0;
+  /* Sober Picker 面板同款: 1px outline-variant 描边 (浅色背景下纯阴影不够立) */
+  border: 1px solid var(--mdui-color-outline-variant);
   border-radius: 8px;
   background-color: var(--mdui-color-surface-container);
   color: var(--mdui-color-on-surface);

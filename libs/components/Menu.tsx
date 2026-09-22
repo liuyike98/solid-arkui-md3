@@ -141,6 +141,7 @@ const contentClassName = css`
   max-height: min(var(--available-height, 320px), 320px);
   overflow-y: auto;
   padding: 6px 0;
+  border: 1px solid var(--mdui-color-outline-variant);
   border-radius: 8px;
   background-color: var(--mdui-color-surface-container);
   color: var(--mdui-color-on-surface);
