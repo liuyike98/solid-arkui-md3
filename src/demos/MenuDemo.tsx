@@ -2,6 +2,7 @@ import { Button } from '@libs/components/Button';
 import { Icon } from '@libs/components/Icon';
 import {
   BindMenu,
+  Menu,
   MenuContent,
   MenuContextTrigger,
   MenuGroup,
@@ -49,7 +50,7 @@ function MenuDemo() {
         </BindMenu>
         <StateText>最近选择: {selected() || '-'}</StateText>
       </Row>
-      {/* <Row caption='分组与禁用'>
+      <Row caption='分组与禁用'>
         <Menu>
           <MenuTrigger>
             <Button variant='tonal'>分组菜单</Button>
@@ -76,7 +77,7 @@ function MenuDemo() {
       </Row>
       <Row caption='二级菜单'>
         <Menu>
-          <MenuTrigger>
+          <MenuTrigger >
             <Button variant='outlined'>导出文件</Button>
           </MenuTrigger>
           <MenuContent>
@@ -112,8 +113,8 @@ function MenuDemo() {
           </MenuContent>
         </Menu>
       </Row>
-      <Row caption='右键菜单'> */}
-      {/* <Menu>
+      <Row caption='右键菜单'>
+      <Menu>
         <MenuContextTrigger>
           <div class={contextBoxClassName}>在此区域点击右键</div>
         </MenuContextTrigger>
@@ -125,8 +126,8 @@ function MenuDemo() {
             检查
           </MenuItem>
         </MenuContent>
-      </Menu> */}
-      {/* </Row> */}
+      </Menu>
+      </Row>
     </DemoList>
   );
 }

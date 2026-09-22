@@ -21,7 +21,7 @@ export interface MenuItemProps extends ArkMenuItemProps {
   icon?: MaterialIcon;
 }
 
-function Menu(props: MenuProps) {
+export function Menu(props: MenuProps) {
   return <ArkMenu.Root {...props} />;
 }
 
@@ -78,7 +78,7 @@ export function MenuContent(props: { class?: string; children?: JSX.Element }) {
 export function MenuItem(props: MenuItemProps) {
   const [local, restProps] = splitProps(props, ['class', 'icon', 'children', 'disabled']);
   return (
-    <ArkMenu.Item {...restProps} class={classNames(itemClassName, local.class)}>
+    <ArkMenu.Item {...restProps} disabled={local.disabled} class={classNames(itemClassName, local.class)}>
       <Show when={local.icon}>
         <span class='menu-item-icon'>
           <Icon name={local.icon!} size={16} />
@@ -140,11 +140,11 @@ const contentClassName = css`
   min-width: 160px;
   max-height: min(var(--available-height, 320px), 320px);
   overflow-y: auto;
-  padding: 8px 0;
-  border-radius: 12px;
+  padding: 6px 0;
+  border-radius: 8px;
   background-color: var(--mdui-color-surface-container);
   color: var(--mdui-color-on-surface);
-  font-size: 14px;
+  font-size: 13px;
   outline: none;
   box-shadow:
     0 1px 3px 0 rgb(0 0 0 / 20%),
@@ -203,7 +203,7 @@ const itemClassName = css`
   gap: 8px;
   box-sizing: border-box;
   min-height: 36px;
-  padding: 0 12px;
+  padding: 0 10px;
   outline: none;
   overflow: hidden;
   color: var(--mdui-color-on-surface-variant);
@@ -219,10 +219,10 @@ const itemClassName = css`
     align-items: center;
     justify-content: center;
     width: 24px;
-    color: var(--mdui-color-on-surface-variant);
+    color: inherit; /* 跟随项色 (禁用态 38% 自动生效) */
   }
 
-  &[data-highlighted] {
+  &[data-highlighted]:not([data-disabled]) {
     background-color: color-mix(in srgb, var(--mdui-color-on-surface) 8%, transparent);
   }
 
@@ -250,7 +250,7 @@ const itemTriggerClassName = css`
   outline: none;
   overflow: hidden;
   color: var(--mdui-color-on-surface-variant);
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 500;
   line-height: 20px;
   text-align: left;
@@ -272,7 +272,7 @@ const itemTriggerClassName = css`
 `;
 
 const labelClassName = css`
-  padding: 6px 12px;
+  padding: 4px 14px;
   color: var(--mdui-color-on-surface-variant);
   font-size: 12px;
   font-weight: 400;
@@ -281,7 +281,8 @@ const labelClassName = css`
 
 const separatorClassName = css`
   height: 1px;
-  margin: 8px 0;
+  margin: 2px 12px;
   border: none;
+  opacity: 0.5;
   background-color: var(--mdui-color-outline-variant);
 `;
