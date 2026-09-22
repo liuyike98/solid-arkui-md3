@@ -24,7 +24,22 @@ interface TextFieldProps extends Omit<JSX.HTMLAttributes<HTMLDivElement>, 'onInp
 }
 
 export function TextField(props: TextFieldProps) {
-  const [local, rest] = splitProps(props, ['class', 'label', 'disabled', 'type', 'iconStart', 'iconEnd', 'value', 'defaultValue', 'placeholder', 'required', 'helper', 'error', 'invalid', 'onInput']);
+  const [local, rest] = splitProps(props, [
+    'class',
+    'label',
+    'disabled',
+    'type',
+    'iconStart',
+    'iconEnd',
+    'value',
+    'defaultValue',
+    'placeholder',
+    'required',
+    'helper',
+    'error',
+    'invalid',
+    'onInput',
+  ]);
   /* 初始态同步取自 value/defaultValue, 有默认值时首帧即浮起, 避免入场播放标签动画 */
   const [hasText, setHasText] = createSignal((local.value ?? local.defaultValue ?? '') !== '');
   const [focused, setFocused] = createSignal(false);
@@ -74,7 +89,11 @@ export function TextField(props: TextFieldProps) {
       data-icon-end={local.iconEnd ? '' : undefined}
     >
       <div class='field-row'>
-        <div class='field-border' data-notch-pending={!notchReady() ? '' : undefined} style={{ 'clip-path': clipPath() }} />
+        <div
+          class='field-border'
+          data-notch-pending={!notchReady() ? '' : undefined}
+          style={{ 'clip-path': clipPath() }}
+        />
         <Show when={local.iconStart}>
           <span class='field-icon'>{local.iconStart}</span>
         </Show>
@@ -115,7 +134,19 @@ export function TextField(props: TextFieldProps) {
 }
 
 export function TextArea(props: TextFieldProps) {
-  const [local, rest] = splitProps(props, ['class', 'label', 'disabled', 'value', 'defaultValue', 'placeholder', 'required', 'helper', 'error', 'invalid', 'onInput']);
+  const [local, rest] = splitProps(props, [
+    'class',
+    'label',
+    'disabled',
+    'value',
+    'defaultValue',
+    'placeholder',
+    'required',
+    'helper',
+    'error',
+    'invalid',
+    'onInput',
+  ]);
   const [hasText, setHasText] = createSignal((local.value ?? local.defaultValue ?? '') !== '');
   const [focused, setFocused] = createSignal(false);
   const floated = () => focused() || hasText();
@@ -160,7 +191,11 @@ export function TextArea(props: TextFieldProps) {
       data-invalid={invalid() ? '' : undefined}
     >
       <div class='field-row'>
-        <div class='field-border' data-notch-pending={!notchReady() ? '' : undefined} style={{ 'clip-path': clipPath() }} />
+        <div
+          class='field-border'
+          data-notch-pending={!notchReady() ? '' : undefined}
+          style={{ 'clip-path': clipPath() }}
+        />
         <Show when={props.label}>
           <div class='text-field-label' ref={label!}>
             {props.label}
@@ -212,7 +247,7 @@ const defaultStyle = css`
 
 const PADDING_LEFT: string = '12px';
 const textFieldStyle = css`
-  font-size: 15px;
+  font-size: 14px;
 
   /* 输入行: 边框 overlay / 图标 / 内容都相对这一层 */
   .field-row {
@@ -318,7 +353,9 @@ const textFieldStyle = css`
 
   /* 有图标时图标侧收窄到 8px (图标自带 4px padding), 标签同步跟随保持与文字对齐 */
   &[data-icon-start] {
-    padding-left: 6px;
+    .field-row {
+      padding-left: 6px;
+    }
 
     input {
       padding-left: 4px;

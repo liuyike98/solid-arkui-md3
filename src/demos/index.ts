@@ -1,5 +1,6 @@
 import { alertDemo } from './AlertDemo';
 import { buttonDemo } from './ButtonDemo';
+import { fieldSetDemo } from './FieldSetDemo';
 import { checkBoxDemo } from './CheckBoxDemo';
 import { dialogDemo } from './DialogDemo';
 import { iconButtonDemo } from './IconButtonDemo';
@@ -42,4 +43,5 @@ export const demos: Demo[] = [
   scrollAreaDemo,
   textFieldDemo,
   alertDemo,
+  fieldSetDemo,
 ];
