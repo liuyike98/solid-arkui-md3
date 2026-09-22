@@ -1,6 +1,7 @@
 import { Select as ArkSelect, type SelectRootProps } from '@ark-ui/solid/select';
 import { createListCollection } from '@ark-ui/solid/collection';
 import { Icon } from '@libs/components/Icon';
+import { FieldSet } from '@libs/components/FieldSet';
 import { For, Show, splitProps, type JSX } from 'solid-js';
 import { Portal } from 'solid-js/web';
 import { css } from 'solid-styled-components';
@@ -35,28 +36,36 @@ export function Select(props: SelectProps) {
       disabled={local.disabled}
       invalid={invalid()}
       class={classNames(rootClassName, local.class)}
-      data-invalid={invalid() ? '' : undefined}
-      data-disabled={local.disabled ? '' : undefined}
     >
       <ArkSelect.Context>
-        {(api) => (
-          <>
-            <div class='select-box' data-float={api().hasSelectedItems || api().open ? '' : undefined} data-open={api().open ? '' : undefined}>
-              <ArkSelect.Label class='select-label'>{local.label}</ArkSelect.Label>
-              <ArkSelect.Trigger class='select-trigger'>
-                <ArkSelect.ValueText class='select-value' placeholder={local.placeholder ?? ' '} />
-                <span class='select-arrow'>
-                  <Icon name='expand_more' />
-                </span>
-              </ArkSelect.Trigger>
-            </div>
-            <div class='select-support'>
-              <Show when={invalid() ? local.error : local.helper} fallback={<span />}>
-                <div class={invalid() ? 'select-error' : 'select-helper'}>{invalid() ? local.error : local.helper}</div>
-              </Show>
-            </div>
-          </>
-        )}
+        {(api) => {
+          const floated = () => api().hasSelectedItems || api().open;
+          return (
+            <>
+              <FieldSet
+                class='select-field'
+                legend={<ArkSelect.Label>{local.label}</ArkSelect.Label>}
+                focused={api().open}
+                floating={!floated()}
+                disabled={local.disabled}
+                invalid={invalid()}
+                body={
+                  <ArkSelect.Trigger class='select-trigger'>
+                    <ArkSelect.ValueText class='select-value' data-placeholder-shown={api().hasSelectedItems ? undefined : ''} placeholder={local.placeholder ?? ' '} />
+                    <span class='select-arrow'>
+                      <Icon name='expand_more' />
+                    </span>
+                  </ArkSelect.Trigger>
+                }
+              />
+              <div class='select-support'>
+                <Show when={invalid() ? local.error : local.helper} fallback={<span />}>
+                  <div class={invalid() ? 'select-error' : 'select-helper'}>{invalid() ? local.error : local.helper}</div>
+                </Show>
+              </div>
+            </>
+          );
+        }}
       </ArkSelect.Context>
       <ArkSelect.HiddenSelect />
       <Portal>
@@ -79,56 +88,31 @@ export function Select(props: SelectProps) {
   );
 }
 
-/* MD3 outlined select: 触发器与 TextField 同款 56dp 描边盒 + 尾部箭头,
-   面板与 Menu 同款 surface-container; data-float 由 Context api 驱动 (stylis :has 缺陷规避) */
+/* MD3 outlined select: 边框/图例/缺口/四态配色全部复用 FieldSet (与 TextField 同源),
+   这里只剩 trigger 内容与 support 文案 */
 const rootClassName = css`
   display: block;
   width: 100%;
   font-family: inherit;
   color: var(--mdui-color-on-surface);
 
-  & .select-box {
-    position: relative;
+  & .select-field {
+    --fs-pad-t: 0px;
+    --fs-pad-b: 0px;
+    --fs-pad-l: 12px;
+    --fs-pad-r: 12px;
+    --fs-min-h: 40px;
+    --fs-gap: 0px;
+    --fs-legend-sunk-top: 20px;
+  }
+
+  & .select-field .fieldset-content {
+    align-items: stretch;
+  }
+
+  & .select-field .fieldset-body {
     display: flex;
     align-items: center;
-    box-sizing: border-box;
-    height: 56px;
-    padding: 0 12px 0 16px;
-    border-radius: 4px;
-    outline: 1px solid var(--mdui-color-outline);
-    outline-offset: -1px;
-    transition:
-      outline-color var(--mdui-motion-duration-short4, 200ms) var(--mdui-motion-easing-standard, cubic-bezier(0.2, 0, 0, 1));
-  }
-
-  &:not([data-disabled]):not([data-invalid]) .select-box:hover {
-    outline-width: 2px;
-  }
-
-  & .select-box:focus-within {
-    outline: 2px solid var(--mdui-color-primary);
-  }
-
-  &[data-invalid] .select-box {
-    outline-color: var(--mdui-color-error);
-  }
-
-  &[data-invalid] .select-box:focus-within {
-    outline: 2px solid var(--mdui-color-error);
-  }
-
-  &[data-disabled] {
-    & .select-box {
-      outline-color: color-mix(in srgb, var(--mdui-color-on-surface) 12%, transparent);
-      background-color: color-mix(in srgb, var(--mdui-color-on-surface) 4%, transparent);
-      pointer-events: none;
-    }
-
-    & .select-label,
-    & .select-value,
-    & .select-arrow {
-      color: color-mix(in srgb, var(--mdui-color-on-surface) 38%, transparent);
-    }
   }
 
   & .select-trigger {
@@ -136,7 +120,8 @@ const rootClassName = css`
     align-items: center;
     justify-content: space-between;
     gap: 8px;
-    width: 100%;
+    flex: 1;
+    min-width: 0;
     height: 100%;
     padding: 0;
     border: none;
@@ -153,18 +138,13 @@ const rootClassName = css`
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
-    display: flex;
-    align-items: center;
-    height: 100%;
-    box-sizing: border-box;
-    /* 与 TextField 一致: 文字带下移, 上方留给浮动标签 */
-    padding: 22px 0 6px;
-    font-size: 16px;
-    line-height: 24px;
+    font-size: inherit;
+    line-height: 2;
+    color: var(--mdui-color-on-surface);
   }
 
-  /* 空值且标签停靠时隐藏占位符 (标签就是提示) */
-  & .select-box:not([data-float]) .select-value[data-placeholder-shown] {
+  /* 图例沉底 (空值未交互) 时隐藏占位符, 图例本身就是提示 */
+  & .select-field[data-floating] .select-value[data-placeholder-shown] {
     visibility: hidden;
   }
 
@@ -176,49 +156,8 @@ const rootClassName = css`
     transition: transform var(--mdui-motion-duration-short4, 200ms) var(--mdui-motion-easing-standard, cubic-bezier(0.2, 0, 0, 1));
   }
 
-  & .select-box[data-open] .select-arrow {
+  & .select-trigger[data-state='open'] .select-arrow {
     transform: rotate(180deg);
-  }
-
-  & .select-label {
-    position: absolute;
-    left: 16px;
-    top: 50%;
-    transform: translateY(-50%);
-    transform-origin: left center;
-    pointer-events: none;
-    max-width: calc(100% - 48px);
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    font-size: 16px;
-    line-height: 24px;
-    color: var(--mdui-color-on-surface-variant);
-    transition:
-      top var(--mdui-motion-duration-short4, 200ms) var(--mdui-motion-easing-standard, cubic-bezier(0.2, 0, 0, 1)),
-      transform var(--mdui-motion-duration-short4, 200ms) var(--mdui-motion-easing-standard, cubic-bezier(0.2, 0, 0, 1)),
-      color var(--mdui-motion-duration-short4, 200ms) var(--mdui-motion-easing-standard, cubic-bezier(0.2, 0, 0, 1));
-  }
-
-  & .select-box[data-float] .select-label {
-    top: 0;
-    transform: translateY(-50%) scale(0.75);
-    padding: 0 4px;
-    margin-left: -4px;
-    background-color: var(--mdui-color-background);
-  }
-
-  & .select-box:focus-within .select-label {
-    top: 0;
-    transform: translateY(-50%) scale(0.75);
-    padding: 0 4px;
-    margin-left: -4px;
-    background-color: var(--mdui-color-background);
-    color: var(--mdui-color-primary);
-  }
-
-  &[data-invalid] .select-box:focus-within .select-label {
-    color: var(--mdui-color-error);
   }
 
   & .select-support {
