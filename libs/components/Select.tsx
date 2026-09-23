@@ -228,7 +228,7 @@ const contentClassName = css`
   @keyframes mdui-select-open {
     from {
       opacity: 0;
-      transform: scale(1) translateY(-12px);
+      transform: scale(.95) translateY(-12px);
     }
     to {
       opacity: 1;
@@ -243,7 +243,7 @@ const contentClassName = css`
     }
     to {
       opacity: 0;
-      transform: scale(1) translateY(-10px);
+      transform: scale(.95) translateY(-12px);
     }
   }
 `;

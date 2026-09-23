@@ -203,7 +203,7 @@ const itemClassName = css`
   align-items: center;
   gap: 8px;
   box-sizing: border-box;
-  min-height: 36px;
+  min-height: 32px;
   padding: 0 10px;
   outline: none;
   overflow: hidden;
@@ -246,7 +246,7 @@ const itemTriggerClassName = css`
   align-items: center;
   gap: 12px;
   box-sizing: border-box;
-  min-height: 36px;
+  min-height: 32px;
   padding: 0 12px;
   outline: none;
   overflow: hidden;
@@ -275,7 +275,7 @@ const itemTriggerClassName = css`
 const labelClassName = css`
   padding: 4px 14px;
   color: var(--mdui-color-on-surface-variant);
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 400;
   line-height: 16px;
 `;

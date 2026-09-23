@@ -19,6 +19,7 @@ const frameworks = [
 
 function SelectDemo() {
   const [fruit, setFruit] = createSignal('');
+  const [required, setRequired] = createSignal<string[]>([]);
 
   return (
     <DemoList>
@@ -34,7 +35,7 @@ function SelectDemo() {
       </Row>
       <Row caption='错误与禁用'>
         <div class={colClassName}>
-          <Select label='必选项' options={frameworks} error='不能为空' />
+          <Select label='必选项' options={frameworks} value={required()} onValueChange={(details) => setRequired(details.value)} error={required().length === 0 ? '不能为空' : undefined} />
           <Select label='不可用' options={frameworks} disabled />
         </div>
       </Row>
